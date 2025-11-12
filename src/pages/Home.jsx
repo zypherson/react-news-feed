@@ -1,41 +1,55 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
 import NewsCard from '../components/NewsCard';
 
-const mockArticles = [
-  {
-    title: "React 19 Released — What’s New",
-    description: "React 19 introduces new features and performance improvements for developers.",
-    imageUrl: "https://placehold.co/600x400?text=React+19",
-    author: "Dan Abramov",
-    date: "2025-10-25",
-    url: "https://react.dev/blog",
-  },
-  {
-    title: "JavaScript Remains #1 Language in 2025",
-    description: "Developers continue to choose JavaScript for its versatility and ecosystem.",
-    imageUrl: "https://placehold.co/600x400?text=JavaScript",
-    author: "MDN Web Docs",
-    date: "2025-10-26",
-    url: "https://developer.mozilla.org/",
-  },
-  {
-    title: "AI Revolutionizes Frontend Development",
-    description: "AI tools now assist developers in writing, testing, and optimizing UI code.",
-    imageUrl: "https://placehold.co/600x400?text=AI+Frontend",
-    author: "OpenAI Dev Team",
-    date: "2025-10-27",
-    url: "https://openai.com/",
-  },
-];
-
 export default function Home() {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const apiKey = import.meta.env.VITE_NEWS_API_KEY;
+
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const res = await fetch(
+          `https://newsapi.org/v2/top-headlines?country=us&pageSize=9&apiKey=${apiKey}`
+        );
+        const data = await res.json();
+
+        if (data.status === 'ok') {
+          setArticles(data.articles);
+        } else {
+          setError('Failed to load news');
+        }
+      } catch (err) {
+        setError('Something went wrong while fetching news');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchNews();
+  }, [apiKey]);
+
+  if (loading) return <p className="status">Loading news...</p>;
+  if (error) return <p className="status error">{error}</p>;
+
   return (
     <div className="home">
       <h2>Top Headlines</h2>
       <div className="news-grid">
-        {mockArticles.map((article, index) => (
-          <NewsCard key={index} {...article} />
+        {articles.map((article, index) => (
+          <NewsCard
+            key={index}
+            title={article.title}
+            description={article.description}
+            imageUrl={article.urlToImage || 'https://placehold.co/600x400?text=No+Image'}
+            author={article.author}
+            date={article.publishedAt}
+            url={article.url}
+          />
         ))}
       </div>
     </div>
