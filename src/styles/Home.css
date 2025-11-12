@@ -11,4 +11,13 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
   }
+  .status {
+    text-align: center;
+    color: #555;
+    font-size: 1.1rem;
+  }
+  
+  .status.error {
+    color: crimson;
+  }
   
