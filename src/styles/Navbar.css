@@ -17,4 +17,31 @@
     border: none;
     outline: none;
   }
+  .search-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-bar {
+    padding: 8px 10px;
+    border-radius: 4px 0 0 4px;
+    border: none;
+    outline: none;
+    width: 200px;
+  }
+  
+  .search-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    background-color: #61dafb;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .search-btn:hover {
+    background-color: #21a1f1;
+  }
   
