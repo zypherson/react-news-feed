@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles/App.css';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <>
-      <Navbar />
-      <Home />
+      <Navbar onSearch={setSearchTerm} />
+      <Home searchTerm={searchTerm} />
     </>
   );
 }
