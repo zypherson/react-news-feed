@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
 import NewsCard from '../components/NewsCard';
 
-export default function Home({ searchTerm }) {
+export default function Home({ searchTerm, category }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ export default function Home({ searchTerm }) {
 
       const endpoint = searchTerm
         ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(searchTerm)}&pageSize=9&apiKey=${apiKey}`
-        : `https://newsapi.org/v2/top-headlines?country=us&pageSize=9&apiKey=${apiKey}`;
+        : `https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=9&apiKey=${apiKey}`;
 
       try {
         const res = await fetch(endpoint);
@@ -34,14 +34,20 @@ export default function Home({ searchTerm }) {
     }
 
     fetchNews();
-  }, [searchTerm, apiKey]);
+  }, [searchTerm, category, apiKey]);
 
   if (loading) return <p className="status">Loading news...</p>;
   if (error) return <p className="status error">{error}</p>;
 
   return (
     <div className="home">
-      <h2>{searchTerm ? `Results for "${searchTerm}"` : 'Top Headlines'}</h2>
+      <h2>
+        {searchTerm
+          ? `Results for "${searchTerm}"`
+          : `${category.charAt(0).toUpperCase() + category.slice(1)} News`
+        }
+      </h2>
+
       <div className="news-grid">
         {articles.length > 0 ? (
           articles.map((article, index) => (
